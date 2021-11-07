@@ -1,8 +1,11 @@
 import React from 'react'
 
-const Note = ({ note }) => {
+const Note = ({ note, onClick }) => {
   return (
-    <li>{note.content}</li>
+    <div>
+      <li>{note.content}</li>
+      <button value={note} onClick={onClick}>{note.important ? 'Make not important' : 'Make important'}</button>
+    </div>
   )
 }
 

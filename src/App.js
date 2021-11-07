@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import Note from './components/Note'
 import axios from 'axios'
+import noteService from './services/notes.js'
 
 const App = (props) => {
 
@@ -17,10 +18,8 @@ const App = (props) => {
   
 
   useEffect(() => {
-    axios.get('http://localhost:3001/notes')
-    .then(request => {
-      console.log("promise fulfilled")
-      setNotes(request.data)
+    noteService.getAll().then(response => {
+      setNotes(response.data)
     })
   }, [])
 
@@ -37,11 +36,27 @@ const App = (props) => {
       id: notes.length + 1
     }
 
+    noteService
+      .create(noteObject)
+      .then(response => {
+        setNotes(notes.concat(response.data))
+        setWriting('')
+      })
+
     setNotes(notes.concat(noteObject));
     setWriting('')
   }
 
-  
+  const toggleImportanceOf = (id) => {
+    const note = notes.find(n => n.id === id)
+    const changedNote = {...note, important: !note.important}
+
+    noteService
+      .update(id, changedNote)
+      .then(response => {
+        setNotes(notes.map(note => note.id !== id ? note : response.data))
+      })
+  }
   
   return (
     <div>
@@ -49,7 +64,7 @@ const App = (props) => {
       <b>{showAll ? 'Showing all notes' : 'Only showing important notes'}</b>
       <ul>
         {notesToShow.map(note => 
-          <Note key={note.id} note={note} />
+          <Note onClick={() => toggleImportanceOf(note.id)} key={note.id} note={note} />
         )}
       </ul>
       <div>
