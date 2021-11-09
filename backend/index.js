@@ -1,9 +1,11 @@
-
 // Different syntax, but similar idea to 'import express from 'express'
 const express = require('express');
 // express() is a function, creating an express application stored in 'app'
 const app = express()
 app.use(express.json())
+
+const cors = require('cors')
+app.use(cors())
 
 let notes = [
   {
