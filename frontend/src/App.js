@@ -37,6 +37,8 @@ const App = (props) => {
       id: notes.length + 1
     }
 
+    console.log(noteObject.id)
+    
     noteService
       .create(noteObject)
       .then(returnedNote => {
